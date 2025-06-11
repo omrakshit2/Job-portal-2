@@ -1,160 +1,143 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="jobPortalApp" ng-controller="MainController">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CareerHub - Your Gateway to Success</title>
+// Directory structure:
+// - src/
+//   - app/
+//     - app.component.ts
+//     - app.component.html
+//     - app.component.css
+//     - app.module.ts
+// - angular.json
+// - package.json
 
-  <!-- AngularJS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+// 1. app.module.ts
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { AppComponent } from './app.component';
 
-  <!-- Font Awesome -->
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    rel="stylesheet"
-  />
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, FormsModule],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
 
-  <style>
-    /* Keep your existing CSS unchanged */
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
-    .header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-    .nav-item {
-      display: inline-block;
-      margin-right: 1rem;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .nav-item.active {
-      color: #764ba2;
-    }
-    .main-content {
-      padding: 2rem;
-    }
-    .feature-card {
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      margin: 1rem 0;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <header class="header">
-    <div class="logo"><i class="fas fa-rocket"></i> CareerHub</div>
-    <nav>
-      <span class="nav-item" ng-class="{active: currentView === 'home'}" ng-click="setView('home')">Home</span>
-      <span class="nav-item" ng-class="{active: currentView === 'roadmaps'}" ng-click="setView('roadmaps')">Roadmaps</span>
-      <span class="nav-item" ng-class="{active: currentView === 'resume'}" ng-click="setView('resume')">Resume Builder</span>
-    </nav>
-  </header>
+// 2. app.component.ts
+import { Component } from '@angular/core';
 
-  <main class="main-content">
-    <!-- Home View -->
-    <div ng-show="currentView === 'home'">
-      <h1>Welcome to CareerHub</h1>
-      <div class="feature-card" ng-click="setView('roadmaps')">
-        <i class="fas fa-route"></i> Career Roadmaps
-      </div>
-      <div class="feature-card" ng-click="setView('resume')">
-        <i class="fas fa-file-alt"></i> Resume Builder
-      </div>
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  currentView = 'home';
+  selectedRoadmap = 'frontend';
+  showResumeForm = false;
+  showPreview = false;
+
+  resumeData = {
+    name: '',
+    email: '',
+    summary: ''
+  };
+
+  roadmaps = {
+    frontend: [
+      { title: 'Learn HTML & CSS', description: 'Basics of web structure and styling.' },
+      { title: 'JavaScript Basics', description: 'Programming fundamentals for the web.' }
+    ],
+    backend: [
+      { title: 'Choose a Language', description: 'Node.js, Python, Java, etc.' },
+      { title: 'Database Skills', description: 'Learn SQL/NoSQL and how to integrate.' }
+    ]
+  };
+
+  setView(view: string) {
+    this.currentView = view;
+  }
+
+  selectRoadmap(roadmap: string) {
+    this.selectedRoadmap = roadmap;
+  }
+
+  getCurrentRoadmap() {
+    return this.roadmaps[this.selectedRoadmap];
+  }
+
+  generateResume() {
+    this.showPreview = false;
+    setTimeout(() => {
+      this.showPreview = true;
+    }, 500);
+  }
+}
+
+// 3. app.component.html
+<header>
+  <h1>CareerHub</h1>
+  <nav>
+    <button (click)="setView('home')">Home</button>
+    <button (click)="setView('roadmaps')">Roadmaps</button>
+    <button (click)="setView('resume')">Resume Builder</button>
+  </nav>
+</header>
+
+<main>
+  <!-- Home View -->
+  <div *ngIf="currentView === 'home'">
+    <h2>Welcome to CareerHub</h2>
+    <button (click)="setView('roadmaps')">Explore Roadmaps</button>
+    <button (click)="setView('resume')">Build Resume</button>
+  </div>
+
+  <!-- Roadmaps View -->
+  <div *ngIf="currentView === 'roadmaps'">
+    <h2>Career Roadmaps</h2>
+    <button (click)="selectRoadmap('frontend')">Frontend</button>
+    <button (click)="selectRoadmap('backend')">Backend</button>
+    <ul>
+      <li *ngFor="let step of getCurrentRoadmap(); index as i">
+        {{ i + 1 }}. <strong>{{ step.title }}</strong>: {{ step.description }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Resume Builder View -->
+  <div *ngIf="currentView === 'resume'">
+    <h2>Resume Builder</h2>
+    <form (ngSubmit)="generateResume()">
+      <label>Name:</label>
+      <input type="text" [(ngModel)]="resumeData.name" name="name" required>
+      <br>
+      <label>Email:</label>
+      <input type="email" [(ngModel)]="resumeData.email" name="email" required>
+      <br>
+      <label>Summary:</label>
+      <textarea [(ngModel)]="resumeData.summary" name="summary"></textarea>
+      <br>
+      <button type="submit">Generate Preview</button>
+    </form>
+
+    <div *ngIf="showPreview">
+      <h3>Preview:</h3>
+      <p><strong>{{ resumeData.name }}</strong></p>
+      <p>{{ resumeData.email }}</p>
+      <p>{{ resumeData.summary }}</p>
     </div>
+  </div>
+</main>
 
-    <!-- Roadmaps View -->
-    <div ng-show="currentView === 'roadmaps'">
-      <h2>Career Roadmaps</h2>
-      <div>
-        <button ng-click="selectRoadmap('frontend')">Frontend</button>
-        <button ng-click="selectRoadmap('backend')">Backend</button>
-      </div>
-      <ul>
-        <li ng-repeat="step in getCurrentRoadmap()">
-          <strong>{{$index + 1}}. {{step.title}}</strong>: {{step.description}}
-        </li>
-      </ul>
-    </div>
-
-    <!-- Resume Builder View -->
-    <div ng-show="currentView === 'resume'">
-      <h2>Resume Builder</h2>
-      <form ng-submit="generateResume()">
-        <label>Name:</label>
-        <input type="text" ng-model="resumeData.name" required /><br />
-        <label>Email:</label>
-        <input type="email" ng-model="resumeData.email" required /><br />
-        <label>Summary:</label>
-        <textarea ng-model="resumeData.summary"></textarea><br />
-        <button type="submit">Generate Preview</button>
-      </form>
-
-      <div ng-show="showPreview" style="margin-top: 2rem;">
-        <h3>Preview:</h3>
-        <p><strong>{{resumeData.name}}</strong></p>
-        <p>{{resumeData.email}}</p>
-        <p>{{resumeData.summary}}</p>
-      </div>
-    </div>
-  </main>
-
-  <script>
-    angular.module('jobPortalApp', [])
-    .controller('MainController', function($scope, $timeout) {
-      $scope.currentView = 'home';
-      $scope.setView = function(view) {
-        $scope.currentView = view;
-      };
-
-      // Resume Data
-      $scope.resumeData = {
-        name: '',
-        email: '',
-        summary: ''
-      };
-      $scope.showPreview = false;
-
-      $scope.generateResume = function() {
-        $scope.showPreview = false;
-        $timeout(function() {
-          $scope.showPreview = true;
-        }, 500);
-      };
-
-      // Roadmap Data
-      $scope.selectedRoadmap = 'frontend';
-      $scope.roadmaps = {
-        frontend: [
-          { title: 'Learn HTML & CSS', description: 'Basics of web structure and styling.' },
-          { title: 'JavaScript Basics', description: 'Programming fundamentals for the web.' }
-        ],
-        backend: [
-          { title: 'Choose a Language', description: 'Node.js, Python, Java, etc.' },
-          { title: 'Database Skills', description: 'Learn SQL/NoSQL and how to integrate.' }
-        ]
-      };
-
-      $scope.selectRoadmap = function(roadmap) {
-        $scope.selectedRoadmap = roadmap;
-      };
-
-      $scope.getCurrentRoadmap = function() {
-        return $scope.roadmaps[$scope.selectedRoadmap];
-      };
-    });
-  </script>
-</body>
-</html>
+// 4. app.component.css
+header {
+  background: #fff;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+nav button {
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+}
+main {
+  padding: 2rem;
+}
