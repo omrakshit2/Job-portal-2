@@ -1,14 +1,83 @@
 // Directory structure:
+// - vercel.json
+// - package.json
+// - angular.json
 // - src/
 //   - app/
 //     - app.component.ts
 //     - app.component.html
 //     - app.component.css
 //     - app.module.ts
-// - angular.json
-// - package.json
 
-// 1. app.module.ts
+// vercel.json
+{
+  "buildCommand": "npx ng build --configuration production",
+  "outputDirectory": "dist/careerhub"
+}
+
+// package.json
+{
+  "name": "careerhub",
+  "version": "0.0.1",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "private": true,
+  "devDependencies": {
+    "@angular/cli": "^16.0.0",
+    "@angular/compiler-cli": "^16.0.0",
+    "typescript": "~4.9.4"
+  },
+  "dependencies": {
+    "@angular/animations": "^16.0.0",
+    "@angular/common": "^16.0.0",
+    "@angular/compiler": "^16.0.0",
+    "@angular/core": "^16.0.0",
+    "@angular/forms": "^16.0.0",
+    "@angular/platform-browser": "^16.0.0",
+    "@angular/platform-browser-dynamic": "^16.0.0",
+    "@angular/router": "^16.0.0",
+    "rxjs": "~7.5.0",
+    "zone.js": "~0.13.0"
+  }
+}
+
+// angular.json (only key parts shown)
+{
+  "projects": {
+    "careerhub": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "options": {
+            "outputPath": "dist/careerhub",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  }
+}
+
+// src/app/app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +91,7 @@ import { AppComponent } from './app.component';
 })
 export class AppModule {}
 
-// 2. app.component.ts
+// src/app/app.component.ts
 import { Component } from '@angular/core';
 
 @Component({
@@ -73,7 +142,7 @@ export class AppComponent {
   }
 }
 
-// 3. app.component.html
+// src/app/app.component.html
 <header>
   <h1>CareerHub</h1>
   <nav>
@@ -128,7 +197,7 @@ export class AppComponent {
   </div>
 </main>
 
-// 4. app.component.css
+// src/app/app.component.css
 header {
   background: #fff;
   padding: 1rem;
