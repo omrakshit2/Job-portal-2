@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerHub - Your Gateway to Success</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Home Page Styles */
+        .hero-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 4rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Career Roadmaps */
+        .roadmap-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .roadmap-selector {
+            margin-bottom: 2rem;
+        }
+
+        .roadmap-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .roadmap-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            background: #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .roadmap-btn.active, .roadmap-btn:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .roadmap-path {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .roadmap-step {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .roadmap-step:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .step-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .step-content p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Resume Builder */
+        .resume-builder {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .resume-form {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .form-group input, 
+        .form-group textarea,
+        .form-group select {
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .resume-preview {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #e0e0e0;
+            margin-top: 2rem;
+        }
+
+        .resume-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .resume-name {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-contact {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .resume-section h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+
+        /* AI Resume Checker */
+        .ai-checker {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .analysis-result {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .score-display {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .score-excellent { background: linear-gradient(135deg, #10b981, #059669); }
+        .score-good { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .score-average { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        .suggestions {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .suggestion-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        /* Community Hub */
+        .community-hub {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .community-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .community-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .community-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .community-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .community-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .community-desc {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .community-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .community-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Templates Grid */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .template-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .template-preview {
+            height: 200px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #667eea;
+        }
+
+        .template-info {
+            padding: 1rem;
+        }
+
+        .template-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .roadmap-buttons {
+                flex-direction: column;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body ng-app="jobPortalApp" ng-controller="MainController">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-rocket"></i> CareerHub
+                </div>
+                <nav>
+                    <ul class="nav-menu">
+                        <li class="nav-item" ng-class="{active: currentView === 'home'}" ng-click="setView('home')">
+                            <i class="fas fa-home"></i> Home
+                        </li>
+                        <li class="nav-item" ng-class="{active: currentView === 'roadmaps'}" ng-click="setView('roadmaps')">
+                            <i class="fas fa-route"></i> Roadmaps
+                        </li>
+                        <li class="nav-item" ng-class="{active: currentView === 'resume'}" ng-click="setView('resume')">
+                            <i class="fas fa-file-alt"></i> Resume Builder
+                        </li>
+                        <li class="nav-item" ng-class="{active: currentView === 'checker'}" ng-click="setView('checker')">
+                            <i class="fas fa-robot"></i> AI Checker
+                        </li>
+                        <li class="nav-item" ng-class="{active: currentView === 'community'}" ng-click="setView('community')">
+                            <i class="fas fa-users"></i> Community
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home View -->
+            <div ng-show="currentView === 'home'">
+                <section class="hero-section">
+                    <h1 class="hero-title">Welcome to CareerHub</h1>
+                    <p class="hero-subtitle">Your all-in-one platform for career success</p>
+                </section>
+
+                <div class="features-grid">
+                    <div class="feature-card" ng-click="setView('roadmaps')">
+                        <div class="feature-icon">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <h3 class="feature-title">Career Roadmaps</h3>
+                        <p class="feature-desc">Discover step-by-step paths to your dream career with personalized roadmaps for various tech roles.</p>
+                    </div>
+
+                    <div class="feature-card" ng-click="setView('resume')">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Resume Builder</h3>
+                        <p class="feature-desc">Create professional resumes with our intuitive builder and pre-designed templates.</p>
+                    </div>
+
+                    <div class="feature-card" ng-click="setView('checker')">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3 class="feature-title">AI Resume Checker</h3>
+                        <p class="feature-desc">Get instant feedback on your resume with our AI-powered analysis and improvement suggestions.</p>
+                    </div>
+
+                    <div class="feature-card" ng-click="setView('community')">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="feature-title">Community Hub</h3>
+                        <p class="feature-desc">Connect with like-minded professionals in our Discord and Slack communities.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Career Roadmaps View -->
+            <div ng-show="currentView === 'roadmaps'" class="roadmap-container">
+                <h2 style="color: #333; margin-bottom: 2rem; text-align: center;">
+                    <i class="fas fa-route"></i> Career Roadmaps
+                </h2>
+                
+                <div class="roadmap-selector">
+                    <div class="roadmap-buttons">
+                        <button class="roadmap-btn" 
+                                ng-class="{active: selectedRoadmap === 'frontend'}"
+                                ng-click="selectRoadmap('frontend')">
+                            Frontend Developer
+                        </button>
+                        <button class="roadmap-btn" 
+                                ng-class="{active: selectedRoadmap === 'backend'}"
+                                ng-click="selectRoadmap('backend')">
+                            Backend Developer
+                        </button>
+                        <button class="roadmap-btn" 
+                                ng-class="{active: selectedRoadmap === 'fullstack'}"
+                                ng-click="selectRoadmap('fullstack')">
+                            Full Stack Developer
+                        </button>
+                        <button class="roadmap-btn" 
+                                ng-class="{active: selectedRoadmap === 'devops'}"
+                                ng-click="selectRoadmap('devops')">
+                            DevOps Engineer
+                        </button>
+                        <button class="roadmap-btn" 
+                                ng-class="{active: selectedRoadmap === 'datascience'}"
+                                ng-click="selectRoadmap('datascience')">
+                            Data Scientist
+                        </button>
+                    </div>
+                </div>
+
+                <div class="roadmap-path">
+                    <div class="roadmap-step" ng-repeat="step in getCurrentRoadmap()">
+                        <div class="step-number">{{$index + 1}}</div>
+                        <div class="step-content">
+                            <h3>{{step.title}}</h3>
+                            <p>{{step.description}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resume Builder View -->
+            <div ng-show="currentView === 'resume'" class="resume-builder">
+                <h2 style="color: #333; margin-bottom: 2rem; text-align: center;">
+                    <i class="fas fa-file-alt"></i> Resume Builder
+                </h2>
+
+                <!-- Template Selection -->
+                <div ng-show="!showResumeForm">
+                    <h3 style="margin-bottom: 1rem;">Choose a Template</h3>
+                    <div class="templates-grid">
+                        <div class="template-card" ng-repeat="template in resumeTemplates" ng-click="selectTemplate(template)">
+                            <div class="template-preview">
+                                <i class="{{template.icon}}"></i>
+                            </div>
+                            <div class="template-info">
+                                <div class="template-name">{{template.name}}</div>
+                                <div class="template-desc">{{template.description}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resume Form -->
+                <div ng-show="showResumeForm">
+                    <button class="btn" ng-click="showResumeForm = false" style="margin-bottom: 2rem;">
+                        <i class="fas fa-arrow-left"></i> Back to Templates
+                    </button>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <h3 style="margin-bottom: 1rem;">Enter Your Details</h3>
+                            <form class="resume-form">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" ng-model="resumeData.name" placeholder="John Doe">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" ng-model="resumeData.email" placeholder="john@example.com">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="tel" ng-model="resumeData.phone" placeholder="+1 (555) 123-4567">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" ng-model="resumeData.location" placeholder="New York, NY">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Professional Summary</label>
+                                    <textarea ng-model="resumeData.summary" rows="4" placeholder="Brief overview of your experience and skills..."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Experience</label>
+                                    <textarea ng-model="resumeData.experience" rows="6" placeholder="• Software Developer at Tech Corp (2020-2023)&#10;• Junior Developer at StartupXYZ (2018-2020)"></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Education</label>
+                                    <textarea ng-model="resumeData.education" rows="3" placeholder="• Bachelor of Computer Science, University (2018)&#10;• Relevant certifications"></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Skills</label>
+                                    <input type="text" ng-model="resumeData.skills" placeholder="JavaScript, React, Node.js, Python, SQL">
+                                </div>
+                                
+                                <button type="button" class="btn" ng-click="generateResume()">
+                                    <i class="fas fa-magic"></i> Generate Resume
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <div ng-show="showPreview">
+                            <h3 style="margin-bottom: 1rem;">Preview</h3>
+                            <div class="resume-preview">
+                                <div class="resume-header">
+                                    <div class="resume-name">{{resumeData.name || 'Your Name'}}</div>
+                                    <div class="resume-contact">{{resumeData.email || 'your.email@example.com'}}</div>
+                                    <div class="resume-contact">{{resumeData.phone || '+1 (555) 123-4567'}}</div>
+                                    <div class="resume-contact">{{resumeData.location || 'Your Location'}}</div>
+                                </div>
+                                
+                                <div class="resume-section" ng-show="resumeData.summary">
+                                    <h3>Professional Summary</h3>
+                                    <p>{{resumeData.summary}}</p>
+                                </div>
+                                
+                                <div class="resume-section" ng-show="resumeData.experience">
+                                    <h3>Experience</h3>
+                                    <pre style="white-space: pre-wrap; font-family: inherit;">{{resumeData.experience}}</pre>
+                                </div>
+                                
+                                <div class="resume-section" ng-show="resumeData.education">
+                                    <h3>Education</h3>
+                                    <pre style="white-space: pre-wrap; font-family: inherit;">{{resumeData.education}}</pre>
+                                </div>
+                                
+                                <div class="resume-section" ng-show="resumeData.skills">
+                                    <h3>Skills</h3>
+                                    <p>{{resumeData.skills}}</p>
+                                </div>
+                            </div>
+                            
+                            <button class="btn" ng-click="downloadResume()" style="margin-top: 1rem; width: 100%;">
+                                <i class="fas fa-download"></i> Download PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Resume Checker View -->
+            <div ng-show="currentView === 'checker'" class="ai-checker">
+                <h2 style="color: #333; margin-bottom: 2rem; text-align: center;">
+                    <i class="fas fa-robot"></i> AI Resume Checker
+                </h2>
+                
+                <div class="upload-area" ng-click="uploadResume()">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h3>Upload Your Resume</h3>
+                    <p>Drag and drop your resume here or click to browse</p>
+                    <p style="color: #999; font-size: 0.9rem;">Supports PDF, DOC, DOCX formats</p>
+                </div>
+                
+                <div ng-show="showAnalysis" class="analysis-result">
+                    <div class="score-display">
+                        <div class="score-circle" ng-class="getScoreClass(resumeScore)">
+                            {{resumeScore}}/100
+                        </div>
+                        <h3>{{getScoreLabel(resumeScore)}}</h3>
+                    </div>
+                    
+                    <h4 style="margin-bottom: 1rem;">Improvement Suggestions:</h4>
+                    <div class="suggestions">
+                        <div class="suggestion-item" ng-repeat="suggestion in resumeSuggestions">
+                            <strong>{{suggestion.category}}:</strong> {{suggestion.text}}
+                        </div>
+                    </div>
+                    
+                    <button class="btn" ng-click="showAnalysis = false" style="margin-top: 2rem;">
+                        <i class="fas fa-upload"></i> Upload Another Resume
+                    </button>
+                </div>
+            </div>
+
+            <!-- Community Hub View -->
+            <div ng-show="currentView === 'community'" class="community-hub">
+                <h2 style="color: #333; margin-bottom: 2rem; text-align: center;">
+                    <i class="fas fa-users"></i> Community Hub
+                </h2>
+                
+                <p style="text-align: center; color: #666; margin-bottom: 2rem;">
+                    Join our thriving community of professionals and get support on your career journey
+                </p>
+                
+                <div class="community-cards">
+                    <div class="community-card">
+                        <div class="community-icon">
+                            <i class="fab fa-discord"></i>
+                        </div>
+                        <h3 class="community-title">Discord Community</h3>
+                        <p class="community-desc">
+                            Join 15,000+ developers, designers, and tech professionals in real-time discussions
+                        </p>
+                        <a href="https://discord.gg/careerhub" class="community-btn" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Join Discord
+                        </a>
+                    </div>
+                    
+                    <div class="community-card">
+                        <div class="community-icon">
+                            <i class="fab fa-slack"></i>
+                        </div>
+                        <h3 class="community-title">Slack Workspace</h3>
+                        <p class="community-desc">
+                            Professional networking and career advice from industry experts
+                        </p>
+                        <a href="https://careerhub.slack.com/join" class="community-btn" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Join Slack
+                        </a>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 2rem; border-radius: 15px; margin-top: 2rem;">
+                    <h3 style="text-align: center; margin-bottom: 2rem;">Community Features</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                        <div style="text-align: center;">
+                            <i class="fas fa-comments" style="font-size: 2rem; color: #667eea; margin-bottom: 1rem;"></i>
+                            <h4>Live Chat Support</h4>
+                            <p style="color: #666;">Get instant help from mentors and peers</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-calendar-alt" style="font-size: 2rem; color: #667eea; margin-bottom: 1rem;"></i>
+                            <h4>Weekly Events</h4>
+                            <p style="color: #666;">Webinars, workshops, and networking sessions</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-briefcase" style="font-size: 2rem; color: #667eea; margin-bottom: 1rem;"></i>
+                            <h4>Job Referrals</h4>
+                            <p style="color: #666;">Exclusive job opportunities from community members</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-graduation-cap" style="font-size: 2rem; color: #667eea; margin-bottom: 1rem;"></i>
+                            <h4>Mentorship</h4>
+                            <p style="color: #666;">Connect with experienced professionals</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        angular.module('jobPortalApp', [])
+        .controller('MainController', ['$scope', function($scope) {
+            // Initialize app state
+            $scope.currentView = 'home';
+            $scope.selectedRoadmap = 'frontend';
+            $scope.showResumeForm = false;
+            $scope.showPreview = false;
+            $scope.showAnalysis = false;
+            $scope.resumeScore = 0;
+            
+            // Navigation
+            $scope.setView = function(view) {
+                $scope.currentView = view;
+            };
+            
+            // Resume data model
+            $scope.resumeData = {
+                name: '',
+                email: '',
+                phone: '',
+                location: '',
+                summary: '',
+                experience: '',
+                education: '',
+                skills: ''
+            };
+            
+            // Resume templates
+            $scope.resumeTemplates = [
+                {
+                    id: 'modern',
+                    name: 'Modern Professional',
+                    description: 'Clean and contemporary design perfect for tech roles',
+                    icon: 'fas fa-laptop-code'
+                },
+                {
+                    id: 'classic',
+                    name: 'Classic Executive',
+                    description: 'Traditional format ideal for corporate positions',
+                    icon: 'fas fa-briefcase'
+                },
+                {
+                    id: 'creative',
+                    name: 'Creative Designer',
+                    description: 'Artistic layout for creative professionals',
+                    icon: 'fas fa-palette'
+                },
+                {
+                    id: 'minimalist',
+                    name: 'Minimalist',
+                    description: 'Simple and elegant design focused on content',
+                    icon: 'fas fa-minus'
+                }
+            ];
+            
+            // Career roadmaps data
+            $scope.roadmaps = {
+                frontend: [
+                    {
+                        title: 'Learn HTML & CSS Fundamentals',
+                        description: 'Master the building blocks of web development with semantic HTML and responsive CSS design principles.'
+                    },
+                    {
+                        title: 'JavaScript Essentials',
+                        description: 'Understand ES6+ features, DOM manipulation, and asynchronous programming concepts.'
+                    },
+                    {
+                        title: 'Version Control with Git',
+                        description: 'Learn Git workflows, branching strategies, and collaboration on platforms like GitHub.'
+                    },
+                    {
+                        title: 'Frontend Framework (React/Vue/Angular)',
+                        description: 'Master a modern framework for building dynamic and interactive user interfaces.'
+                    },
+                    {
+                        title: 'Build Tools & Bundlers',
+                        description: 'Learn Webpack, Vite, or similar tools for optimizing and bundling your applications.'
+                    },
+                    {
+                        title: 'State Management',
+                        description: 'Implement Redux, Vuex, or NgRx for managing complex application state.'
+                    },
+                    {
+                        title: 'Testing & Deployment',
+                        description: 'Write unit tests, integration tests, and deploy applications to production.'
+                    }
+                ],
+                backend: [
+                    {
+                        title: 'Choose a Programming Language',
+                        description: 'Master Python, JavaScript (Node.js), Java, or C# for server-side development.'
+                    },
+                    {
+                        title: 'Database Fundamentals',
+                        description: 'Learn SQL and NoSQL databases like PostgreSQL, MongoDB, or Redis.'
+                    },
+                    {
+                        title: 'API Development',
+                        description: 'Build RESTful APIs and understand GraphQL for data communication.'
+                    },
+                    {
+                        title: 'Authentication & Security',
+                        description: 'Implement JWT, OAuth, and security best practices for web applications.'
+                    },
+                    {
+                        title: 'Server & Cloud Services',
+                        description: 'Deploy applications using AWS, Docker, and containerization technologies.'
+                    },
+                    {
+                        title: 'Performance Optimization',
+                        description: 'Learn caching strategies, database optimization, and scalability patterns.'
+                    },
+                    {
+                        title: 'Monitoring & Logging',
+                        description: 'Implement application monitoring, error tracking, and logging solutions.'
+                    }
+                ],
+                fullstack: [
+                    {
+                        title: 'Frontend Technologies',
+                        description: 'Master HTML, CSS, JavaScript, and a modern framework like React or Vue.'
+                    },
+                    {
+                        title: 'Backend Development',
+                        description: 'Learn server-side programming with Node.js, Python, or your preferred language.'
+                    },
+                    {
+                        title: 'Database Design',
+                        description: 'Design and implement both SQL and NoSQL database solutions.'
+                    },
+                    {
+                        title: 'API Integration',
+                        description: 'Build and consume APIs, understand REST and GraphQL principles.'
+                    },
+                    {
+                        title: 'DevOps Basics',
+                        description: 'Learn deployment strategies, CI/CD pipelines, and cloud platforms.'
+                    },
+                    {
+                        title: 'Full Stack Project',
+                        description: 'Build a complete application from frontend to backend to database.'
+                    },
+                    {
+                        title: 'Advanced Architecture',
+                        description: 'Understand microservices, scalability, and enterprise-level patterns.'
+                    }
+                ],
+                devops: [
+                    {
+                        title: 'Linux & Command Line',
+                        description: 'Master Linux systems administration and shell scripting fundamentals.'
+                    },
+                    {
+                        title: 'Version Control & Git',
+                        description: 'Advanced Git workflows, branching strategies, and repository management.'
+                    },
+                    {
+                        title: 'Containerization',
+                        description: 'Learn Docker for application containerization and Kubernetes for orchestration.'
+                    },
+                    {
+                        title: 'CI/CD Pipelines',
+                        description: 'Implement automated testing and deployment with Jenkins, GitLab CI, or GitHub Actions.'
+                    },
+                    {
+                        title: 'Cloud Platforms',
+                        description: 'Master AWS, Azure, or GCP for scalable infrastructure management.'
+                    },
+                    {
+                        title: 'Infrastructure as Code',
+                        description: 'Use Terraform, Ansible, or CloudFormation for automated infrastructure provisioning.'
+                    },
+                    {
+                        title: 'Monitoring & Observability',
+                        description: 'Implement comprehensive monitoring with Prometheus, Grafana, and logging solutions.'
+                    }
+                ],
+                datascience: [
+                    {
+                        title: 'Python Programming',
+                        description: 'Master Python fundamentals and data science libraries like NumPy and Pandas.'
+                    },
+                    {
+                        title: 'Statistics & Mathematics',
+                        description: 'Learn statistical analysis, probability, and linear algebra foundations.'
+                    },
+                    {
+                        title: 'Data Visualization',
+                        description: 'Create compelling visualizations with Matplotlib, Seaborn, and Plotly.'
+                    },
+                    {
+                        title: 'Machine Learning',
+                        description: 'Understand ML algorithms, model training, and evaluation with scikit-learn.'
+                    },
+                    {
+                        title: 'Deep Learning',
+                        description: 'Explore neural networks and deep learning with TensorFlow or PyTorch.'
+                    },
+                    {
+                        title: 'Big Data Tools',
+                        description: 'Learn Spark, Hadoop, and distributed computing for large-scale data processing.'
+                    },
+                    {
+                        title: 'MLOps & Deployment',
+                        description: 'Deploy machine learning models to production with MLflow and cloud services.'
+                    }
+                ]
+            };
+            
+            // Roadmap functions
+            $scope.selectRoadmap = function(roadmap) {
+                $scope.selectedRoadmap = roadmap;
+            };
+            
+            $scope.getCurrentRoadmap = function() {
+                return $scope.roadmaps[$scope.selectedRoadmap] || [];
+            };
+            
+            // Resume builder functions
+            $scope.selectTemplate = function(template) {
+                $scope.selectedTemplate = template;
+                $scope.showResumeForm = true;
+            };
+            
+            $scope.generateResume = function() {
+                $scope.showPreview = true;
+                // Simulate resume generation
+                setTimeout(function() {
+                    $scope.$apply();
+                }, 500);
+            };
+            
+            $scope.downloadResume = function() {
+                // Simulate PDF download
+                alert('Resume downloaded! (This is a demo - in a real app, this would generate and download a PDF)');
+            };
+            
+            // AI Resume Checker functions
+            $scope.uploadResume = function() {
+                // Simulate file upload
+                var input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.pdf,.doc,.docx';
+                input.onchange = function(e) {
+                    if (e.target.files.length > 0) {
+                        $scope.analyzeResume();
+                    }
+                };
+                input.click();
+            };
+            
+            $scope.analyzeResume = function() {
+                // Simulate AI analysis
+                $scope.showAnalysis = false;
+                
+                setTimeout(function() {
+                    $scope.resumeScore = Math.floor(Math.random() * 40) + 60; // Random score between 60-100
+                    $scope.resumeSuggestions = [
+                        {
+                            category: 'Keywords',
+                            text: 'Add more industry-specific keywords related to your target role. Include technical skills and tools mentioned in job descriptions.'
+                        },
+                        {
+                            category: 'Experience',
+                            text: 'Quantify your achievements with specific numbers and metrics. Use action verbs to start each bullet point.'
+                        },
+                        {
+                            category: 'Formatting',
+                            text: 'Ensure consistent formatting throughout your resume. Use proper spacing and alignment for better readability.'
+                        },
+                        {
+                            category: 'Skills Section',
+                            text: 'Organize your skills by category (e.g., Programming Languages, Frameworks, Tools) for better clarity.'
+                        },
+                        {
+                            category: 'Summary',
+                            text: 'Write a compelling professional summary that highlights your unique value proposition and career goals.'
+                        }
+                    ];
+                    $scope.showAnalysis = true;
+                    $scope.$apply();
+                }, 2000);
+            };
+            
+            $scope.getScoreClass = function(score) {
+                if (score >= 85) return 'score-excellent';
+                if (score >= 70) return 'score-good';
+                return 'score-average';
+            };
+            
+            $scope.getScoreLabel = function(score) {
+                if (score >= 85) return 'Excellent Resume!';
+                if (score >= 70) return 'Good Resume';
+                return 'Needs Improvement';
+            };
+        }]);
+    </script>
+</body>
+</html>
